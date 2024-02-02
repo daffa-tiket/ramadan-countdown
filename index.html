@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div class="col">
+        <div class="container row">
+            <h1 id="headline">Countdown to ramadhan</h1>
+            <div id="countdown">
+                <ul class="row">
+                    <li class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="days"></span>days
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="hours"></span>Hours
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="minutes"></span>Minutes
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="seconds"></span>Seconds
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container row" style="color: white;">
+            <h1 id="hadits-title">Hadits Hari Ini</h1>
+            <p id="hadits-arab"></p>
+            <p id="hadits-indo"></p>
+            <p id="hadits-author"></p>
+        </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get('https://api.aladhan.com/v1/hToG/01-09-1445', function (data) {
+                const second = 1000,
+                    minute = second * 60,
+                    hour = minute * 60,
+                    day = hour * 24;
+
+                ramadanDate = data.data.gregorian.date
+                ramadanDateSplit = ramadanDate.split("-")
+
+                let today = new Date(),
+                    dd = String(today.getDate()).padStart(2, "0"),
+                    mm = String(today.getMonth() + 1).padStart(2, "0"),
+                    yyyy = today.getFullYear(),
+                    birthday = ramadanDateSplit[1] + "/" + ramadanDateSplit[0] + "/" + ramadanDateSplit[2];
+
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const countDown = new Date(birthday).getTime(),
+                    x = setInterval(function () {
+
+                        const now = new Date().getTime(),
+                            distance = countDown - now;
+
+                        document.getElementById("days").innerText = Math.floor(distance / (day)),
+                            document.getElementById("hours").innerText = Math.floor((distance % (day)) / (hour)),
+                            document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute)),
+                            document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
+
+                        if (distance < 0) {
+                            document.getElementById("headline").innerText = "It's my birthday!";
+                            document.getElementById("countdown").style.display = "none";
+                            document.getElementById("content").style.display = "block";
+                            clearInterval(x);
+                        }
+                    }, 0)
+            });
+            getHadits();
+        });
+        function getHadits() {
+            let myMap = new Map();
+
+            // Assuming this is an asynchronous operation (like an AJAX call)
+            $.get('https://api.hadith.gading.dev/books', function (data) {
+                data.data.forEach(element => {
+                    myMap.set(element.id, element.available);
+                });
+
+                getDetailHadits(myMap)
+
+            });
+        }
+
+        function getDetailHadits(booksMap) {
+            try {
+                // Get an array of keys
+                const keysArray = Array.from(booksMap.keys());
+                console.log(booksMap);
+
+                // Choose a random key from the array
+                const randomKey = keysArray[Math.floor(Math.random() * keysArray.length)];
+                console.log(randomKey);
+
+                let randomNum = getRandomNumber(1, booksMap.get(randomKey));
+
+                let bookName = randomKey;
+                let chapterNumber = randomNum;
+
+                $.get(`https://api.hadith.gading.dev/books/${bookName}/${chapterNumber}`, function (data) {
+                    console.log(data);
+                    document.getElementById("hadits-arab").innerText = data.data.contents.arab;
+                    document.getElementById("hadits-indo").innerText = data.data.contents.id;
+                    document.getElementById("hadits-author").innerText = data.data.name;
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        // Check if the error is a 404 (Not Found)
+                        if (jqXHR.status === 404) {
+                            console.log("Hadith not found. Retrying...");
+                            // Retry the getDetailHadits function
+                            getDetailHadits(booksMap);
+                        } else {
+                            // Handle other types of errors
+                            console.error("Error fetching Hadith details:", errorThrown);
+                        }
+                    });
+            } catch (error) {
+                console.error("Error processing Hadith details:", error);
+            }
+        }
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    </script>
+</body>
+
+</html>
