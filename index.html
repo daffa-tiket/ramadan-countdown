@@ -11,53 +11,61 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-XXX" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Ramadhan Countdown</title>
 </head>
 
 <body>
-    <div class="col">
-        <div class="container row">
-            <h1 id="headline">Countdown to ramadhan</h1>
-            <div id="countdown">
-                <ul class="row">
-                    <li class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <span id="days"></span>days
-                            </div>
-                        </div>
-                    </li>
-                    <li class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <span id="hours"></span>Hours
-                            </div>
-                        </div>
-                    </li>
-                    <li class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <span id="minutes"></span>Minutes
-                            </div>
-                        </div>
-                    </li>
-                    <li class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <span id="seconds"></span>Seconds
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+    <div class="container main-content">
+        <div class="col">
+            <div class="container main-title">
+                <h1>Countdown to Ramadhan</h1>
             </div>
-        </div>
-        <div class="container row hadits-content" style="color: white;">
-            <div>
-                <h1 id="hadits-title">Hadits Hari Ini</h1>
-                <p id="hadits-arab" class="scrollable-box"></p>
-                <p id="hadits-indo" class="scrollable-box"></p>
-                <p id="hadits-author"></p>
+            <div id="countdown">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="days"></span> Days
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="hours"></span> Hours
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="minutes"></span> Minutes
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="seconds"></span> Seconds
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container row hadits-content" style="color: white;">
+                <div>
+                    <h1 id="hadits-title">Hadits Hari Ini</h1>
+                    <button id="reloadButton" onclick="getHadits()">
+                        <i class="fa fa-address-book"></i> Reload
+                    </button>            
+                    <div class="scrollable-box">
+                        <p id="hadits-arab"></p>
+                        <p id="hadits-indo"></p>
+                        <p id="hadits-author"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
