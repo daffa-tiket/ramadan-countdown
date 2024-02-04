@@ -97,7 +97,7 @@
                 yyyy = todayDate.getFullYear();
             todayDateString = dd + "-" + mm + "-" + yyyy
             let oneRamadhanDate = "01-09-1445"
-            $.get(`http://api.aladhan.com/v1/gToH/${todayDateString}`, function (data) {
+            $.get(`https://api.aladhan.com/v1/gToH/${todayDateString}`, function (data) {
                 let hijriYear = data.data.hijri.year
                 if ((data.data.hijri.month.number) > 9) {
                     hijriYear = parseInt(data.data.hijri.year) + 1
